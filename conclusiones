@@ -1,0 +1,29 @@
+Conclusiones Generales del Proyecto
+1. Preparación y Exploración de Datos
+
+Limpieza y Preprocesamiento: Se prepararon los datos eliminando columnas categóricas que no aportaban valor predictivo (RowNumber, CustomerId, Surname) para evitar ruido en el modelo. Se aplicó la codificación One-Hot Encoding (OHE) para las variables categóricas (Geography, Gender) evitando la trampa de las variables ficticias, y se escalaron las características numéricas utilizando StandardScaler para asegurar que variables con magnitudes grandes (como el saldo o el salario) no dominaran a otras más pequeñas (como la edad o el número de productos).
+
+Desequilibrio de clases: Al explorar la variable objetivo (Exited), se detectó un fuerte desequilibrio, donde la gran mayoría de los clientes se quedaban en el banco (clase 0).
+
+2. Entrenamiento del Modelo Base (Sin balanceo)
+
+Se entrenó un modelo inicial de Bosque Aleatorio ignorando el desequilibrio de clases.
+
+Resultados: Se obtuvo un F1-Score de 0.577 y un AUC-ROC de 0.841.
+
+Hallazgo: Aunque el modelo tenía una exactitud aceptable, el F1-Score por debajo del umbral objetivo (0.59) demostró que el modelo estaba sesgado hacia la clase mayoritaria (predecir que los clientes se quedan), fallando en identificar correctamente a una gran parte de los clientes que realmente abandonaban el banco.
+
+3. Estrategias para Mitigar el Desequilibrio
+Para mejorar la calidad del modelo y alcanzar el objetivo, se implementaron y compararon dos técnicas distintas para corregir el desequilibrio:
+
+Ajuste de Pesos de Clase (class_weight='balanced'): Al penalizar más los errores en la clase minoritaria, el modelo mejoró significativamente, logrando un F1-Score de 0.618 con una profundidad óptima de 7.
+
+Sobremuestreo (Upsampling): Se multiplicaron los registros de la clase minoritaria (clientes que abandonan) en el conjunto de entrenamiento para equilibrar las proporciones. Esta técnica resultó ser la más efectiva, alcanzando el mejor F1-Score en validación con 0.627 (a una profundidad de 9) y un AUC-ROC de 0.852.
+
+4. Prueba Final y Evaluación AUC-ROC
+
+El mejor modelo (Bosque Aleatorio con Sobremuestreo y profundidad máxima de 9) fue evaluado utilizando el conjunto de prueba (datos completamente invisibles para el modelo hasta este punto).
+
+Métricas definitivas: El modelo alcanzó un F1-Score de 0.6108, superando con éxito el umbral requerido de 0.59 establecido por Beta Bank.
+
+Análisis AUC-ROC: Se obtuvo un AUC-ROC definitivo de 0.8557. Este valor indica que el modelo tiene una probabilidad superior al 85% de clasificar correctamente a un cliente propenso a irse por encima de uno que decide quedarse. La consistencia entre el alto valor de AUC-ROC y el F1-Score confirma que el modelo es estable, robusto y altamente capaz de ayudar al banco a identificar clientes en riesgo para ofrecerles estrategias de retención.
