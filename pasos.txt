@@ -1,0 +1,29 @@
+Fase 1: Limpieza y Preparación (La trampa silenciosa)
+
+Columnas inútiles: Tienes variables como RowNumber, CustomerId y Surname. Los algoritmos intentarán buscar patrones matemáticos en los apellidos o en el número de fila, lo cual no tiene sentido y arruinará el modelo.
+
+Valores nulos: Revise detenidamente si hay datos faltantes.
+
+Codificación (OHE): Texto en Geography y Gender. Habrá que aplicar pd.get_dummies(drop_first=True) para evitar las variables ficticias que vimos en los ejercicios.
+
+Fase 2: División y Escalado
+Tres conjuntos: necesitamos dividir los datos en Entrenamiento (para aprender), Validación (para ajustar) y Prueba (el examen final ciego). La proporción clásica es 3:1:1 (60% / 20% / 20%).
+
+Estandarización: Las características tienen escalas muy distintas (la edad va de 18 a 100, pero el salario o el saldo bancario tienen miles o millones). Un StandardScaler es obligatorio aquí.
+
+Fase 3: El Modelo Base (Demostrando el problema)
+
+Aquí es donde se va a calcular el F1 y el AUC-ROC. gemini dijo que: (Seguramente verás que tu modelo tiene una exactitud (Accuracy) alta, pero un F1 terrible porque hay muchos más clientes que se quedan (0) que los que se van (1)).
+
+Fase 4: Combate al Desequilibrio. (El núcleo del proyecto.)
+
+Ajuste de pesos de clase: Usar el parámetro class_weight='balanced'.
+
+Sobremuestreo (Upsampling): Multiplicar a los clientes que se fueron (1) para igualar a los que se quedaron.
+
+Submuestreo (Downsampling): Recortar a los clientes que se quedaron (0) para igualar a los pocos que se fueron.
+
+Fase 5: Examen Final
+Tomar la combinación que se encontro en la Fase 4 (por ejemplo: Bosque Aleatorio + Sobremuestreo + Profundidad de 10) y se pone a prueba contra el conjunto de prueba.
+
+El objetivo ser que F1 supere el 0.59
